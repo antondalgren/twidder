@@ -1,0 +1,138 @@
+:root {
+  --shadow: 4px 4px 2px rgba(100, 100, 100, 0.2);
+  --border: 1px rgba(100, 100, 100, 0.1) solid;
+}
+
+body {
+  justify-content: center;
+  display: grid;
+  margin-top: 100px;
+}
+
+#wrapper {
+  display: grid;
+  justify-content: center;
+  width: 600px;
+  grid-template-areas:
+    'logo logo login'
+    'logo logo signup'
+    'logo logo signup';
+}
+
+#wrapper > .logo {
+  display: grid;
+  width: 340px;
+  background-image: url(./wimage.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  grid-area: logo;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+#wrapper > .login {
+  display: grid;
+  margin-left: 10px;
+  grid-area: login;
+  width: 250px;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+#wrapper > .signup {
+  display: grid;
+  grid-area: signup;
+  width: 250px;
+  margin-top: 10px;
+  margin-left: 10px;
+  box-shadow: var(--shadow);
+  border: var(--border);
+  justify-content: center;
+  align-content: center;
+}
+
+.form {
+  display: inherit;
+  justify-content: center;
+  align-content: center;
+  padding: 5px;
+  grid-gap: 3px;
+}
+
+.form > label {
+  display: grid;
+  grid-column: 1;
+  align-content: left;
+  justify-content: left;
+}
+
+.form > input {
+  display: grid;
+  grid-column: 2;
+  align-content: left;
+  justify-content: left;
+}
+
+.form > button {
+  border: var(--border);
+}
+
+.form > h3 {
+  display: grid;
+  grid-column: 1 / 3;
+  align-content: center;
+  justify-content: center;
+  margin: 0px;
+  font-size: 26px;
+}
+.error {
+  display: grid;
+  grid-column: 1 / 3;
+  border: red dotted 2px;
+  color: red;
+  width: 100%;
+  display: none;
+}
+
+.tab {
+  display: inherit;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.tab > .tablink {
+  border: var(--border);
+  justify-content: center;
+  display: inherit;
+  text-decoration: none;
+  padding: 3px;
+  font-size: 22px;
+}
+
+.tab > a:visited {
+  color: black;
+}
+
+.tab > a:hover {
+  color: #b1b1b1;
+}
+
+.tab > .active {
+  background-color: #f8f8f8;
+}
+
+#home {
+  display: grid;
+}
+
+#browse {
+  display: none;
+}
+
+#account {
+  display: none;
+}
+
+#change-password-form {
+
+}
