@@ -124,6 +124,16 @@ function initiateTabs () {
   }
 }
 
+function initiateHomeTab () {
+  let form = document.getElementById('post-message-form')
+  form.onsubmit = (event) => {
+    event.preventDefault()
+    let token = getToken()
+    let res = APIUserData(token)
+    
+    }
+}
+
 function initiateAccountTab () {
   let form = document.getElementById('change-password-form')
   form.onsubmit = (event) => {
@@ -183,4 +193,12 @@ function APIChangePassword(token, oldPassword, newPassword) {
 
 function APISignout (token) {
   return serverstub.signOut(token)
+}
+
+function APIUserData(token){
+  return serverstub.getUserDataByToken(token)
+}
+
+function APIPostMessage(token,message,email){
+  return serverstub.postMessage(token,message,email)
 }
