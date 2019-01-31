@@ -139,3 +139,13 @@ body {
 .content {
   min-width: var(--width);
 }
+
+.user-content {
+  grid-column: 1 / 3;
+  display: inherit;
+}
+
+.user-info {
+  grid-column: 3;
+  display: inherit;
+}
