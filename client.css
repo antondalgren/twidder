@@ -182,7 +182,7 @@ body {
   width: 100%;
 }
 
-#message {
+#message, #message-to-user {
   width: 99%;
   resize: none;
   font-size: 18px;
@@ -190,4 +190,13 @@ body {
 
 #message-button {
   width: 100%;
+}
+
+#search-user-form {
+  width:100%;
+}
+
+#search-user-form > input[type="email"] {
+  width: 80%;
+  font-size: 18px;
 }

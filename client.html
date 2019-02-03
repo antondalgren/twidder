@@ -72,6 +72,14 @@
    </div>
    <div class="content" id="browse">
     <div class="user-content">
+      <form id="search-user-form">
+        <input type="email" name="email" id="search-email" placeholder="example@example.com">
+        <input type="submit" value="Search" id="search-button">
+      </form>
+      <form id="post-message-to-user-form">
+          <textarea name="message" id="message-to-user" required maxlength="140"></textarea>
+          <input type="submit" value="Post message" id="message-button">
+      </form>
       <div class="message-container">
       </div>
     </div>

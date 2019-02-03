@@ -111,6 +111,7 @@ function loadProfile () {
   initiateTabs()
   initiateAccountTab()
   initiateHomeTab()
+  initiateBrowseTab()
 }
 
 function initiateTabs () {
@@ -151,9 +152,8 @@ function loadMessages (token, email, sectionName) {
 function loadUserInfo (token, email, sectionName) {
   let res = APIUserDataByEmail(token, email)
   let infoContainer = document.getElementById(sectionName).getElementsByClassName('user-info')
-  console.log(res.data)
   infoContainer[0].innerHTML = ''
-  infoContainer[0].innerHTML = '<span class="user-header"> Email: </span> <span class="user-data">' + res.data.email + '</span>'
+  infoContainer[0].innerHTML = '<span class="user-header"> Email: </span> <span class="user-data user-email">' + res.data.email + '</span>'
   infoContainer[0].innerHTML += '<span class="user-header"> Name: </span> <span class="user-data">' + res.data.firstname + '</span>'
   infoContainer[0].innerHTML += '<span class="user-header"> Lastname: </span> <span class="user-data">' + res.data.familyname + '</span>'
   infoContainer[0].innerHTML += '<span class="user-header"> City: </span> <span class="user-data">' + res.data.city + '</span>'
@@ -184,6 +184,23 @@ function initiateAccountTab () {
     APISignout(getToken())
     clearToken()
     loadView()
+  }
+}
+
+function initiateBrowseTab () {
+  let form = document.getElementById('search-user-form')
+  let token = getToken()
+  form.onsubmit = (event) => {
+    event.preventDefault()
+    loadMessages(token, event.target.email.value, 'browse')
+    loadUserInfo(token, event.target.email.value, 'browse')
+  }
+  let messageForm = document.getElementById('post-message-to-user-form')
+  messageForm.onsubmit = (event) => {
+    event.preventDefault()
+    APIPostMessage(token, event.target.message.value, document.getElementById('browse').getElementsByClassName('user-email').innerText)
+    loadMessages(token, document.getElementById('search-email').value, 'browse')
+    document.getElementById('message-to-user').value = ''
   }
 }
 
