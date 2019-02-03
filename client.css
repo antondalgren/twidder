@@ -8,7 +8,7 @@ body {
   justify-content: center;
   display: grid;
   margin-top: 100px;
-  min-width: 600px;
+  min-width: var(--width);
 }
 
 #wrapper {
@@ -99,7 +99,7 @@ body {
 
 .tab {
   display: inherit;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit,100px);
   justify-content: left
 }
 
@@ -137,7 +137,7 @@ body {
 }
 
 .content {
-  min-width: var(--width);
+  width: var(--width);
   padding: 2px;
 }
 
@@ -157,6 +157,25 @@ body {
   box-shadow: var(--shadow);
   border: var(--border);
   padding: 3px;
+  grid-template-rows: repeat(auto-fit, 20px)
+}
+
+.user-info > .user-header {
+  grid-column: 1;
+  display: inline;
+}
+
+.user-info > .user-data {
+  grid-column: 2;
+  display: inline;
+}
+
+.user-info > p {
+  display: inherit;
+  margin-block-end: none;
+  margin-block-start: none;
+  margin-inline-start: none;
+  margin-inline-end: none;
 }
 
 #post-message-form {

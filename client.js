@@ -110,6 +110,7 @@ function loadProfile () {
   document.getElementById('content').innerHTML = document.getElementById('profile-view').innerHTML
   initiateTabs()
   initiateAccountTab()
+  initiateHomeTab()
 }
 
 function initiateTabs () {
@@ -126,12 +127,38 @@ function initiateTabs () {
 
 function initiateHomeTab () {
   let form = document.getElementById('post-message-form')
+  let token = getToken()
+  let user = APIUserData(token)
   form.onsubmit = (event) => {
     event.preventDefault()
-    let token = getToken()
-    let res = APIUserData(token)
-    
-    }
+    APIPostMessage(token, event.target.message.value, user.data.email)
+    loadMessages(token, user.data.email, 'home')
+    document.getElementById('message').value = ''
+  }
+  loadMessages(token, user.data.email, 'home')
+  loadUserInfo(token, user.data.email, 'home')
+}
+
+function loadMessages (token, email, sectionName) {
+  let res = APIGetMessages(token, email)
+  let messageContainer = document.getElementById(sectionName).getElementsByClassName('message-container')
+  messageContainer[0].innerHTML = ''
+  res.data.forEach(message => {
+    messageContainer[0].innerHTML += '<p>From: ' + message.writer + ' Message: ' + message.content + '</p>'
+  })
+}
+
+function loadUserInfo (token, email, sectionName) {
+  let res = APIUserDataByEmail(token, email)
+  let infoContainer = document.getElementById(sectionName).getElementsByClassName('user-info')
+  console.log(res.data)
+  infoContainer[0].innerHTML = ''
+  infoContainer[0].innerHTML = '<span class="user-header"> Email: </span> <span class="user-data">' + res.data.email + '</span>'
+  infoContainer[0].innerHTML += '<span class="user-header"> Name: </span> <span class="user-data">' + res.data.firstname + '</span>'
+  infoContainer[0].innerHTML += '<span class="user-header"> Lastname: </span> <span class="user-data">' + res.data.familyname + '</span>'
+  infoContainer[0].innerHTML += '<span class="user-header"> City: </span> <span class="user-data">' + res.data.city + '</span>'
+  infoContainer[0].innerHTML += '<span class="user-header"> Country: </span> <span class="user-data">' + res.data.country + '</span>'
+  infoContainer[0].innerHTML += '<span class="user-header"> Gender: </span> <span class="user-data">' + res.data.gender + '</span>'
 }
 
 function initiateAccountTab () {
@@ -187,7 +214,7 @@ function APISignup (data) {
   return serverstub.signUp(data)
 }
 
-function APIChangePassword(token, oldPassword, newPassword) {
+function APIChangePassword (token, oldPassword, newPassword) {
   return serverstub.changePassword(token, oldPassword, newPassword)
 }
 
@@ -195,10 +222,18 @@ function APISignout (token) {
   return serverstub.signOut(token)
 }
 
-function APIUserData(token){
+function APIUserData (token) {
   return serverstub.getUserDataByToken(token)
 }
 
-function APIPostMessage(token,message,email){
-  return serverstub.postMessage(token,message,email)
+function APIPostMessage (token, message, email) {
+  return serverstub.postMessage(token, message, email)
+}
+
+function APIGetMessages(token, email) {
+  return serverstub.getUserMessagesByEmail(token, email)
+}
+
+function APIUserDataByEmail(token, email) {
+  return serverstub.getUserDataByEmail(token, email)
 }
