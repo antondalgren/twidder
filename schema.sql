@@ -14,14 +14,15 @@ DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
  id INTEGER PRIMARY KEY,
  message TEXT NOT NULL,
- to_id INTEGER NOT NULL,
- from_ id INTEGER NOT NULL
+ to_email TEXT NOT NULL,
+ from_email TEXT NOT NULL
 );
 
 DROP TABLE IF EXISTS active_users;
 CREATE TABLE active_users (
  id INTEGER PRIMARY KEY,
- token TEXT NOT NULL
+ token TEXT NOT NULL,
+ email TEXT NOT NULL
 );
 
 
