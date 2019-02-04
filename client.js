@@ -198,8 +198,14 @@ function initiateBrowseTab () {
   let token = getToken()
   form.onsubmit = (event) => {
     event.preventDefault()
-    loadMessages(token, event.target.email.value, 'browse')
-    loadUserInfo(token, event.target.email.value, 'browse')
+    hideError()
+    let res = APIUserDataByEmail(token, event.target.email.value)
+    if (!res.success) {
+      displayError(res.message, 'search-error')
+    } else {
+      loadMessages(token, event.target.email.value, 'browse')
+      loadUserInfo(token, event.target.email.value, 'browse')
+    }
   }
   let messageForm = document.getElementById('post-message-to-user-form')
   messageForm.onsubmit = (event) => {
