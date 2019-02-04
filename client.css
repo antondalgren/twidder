@@ -134,6 +134,8 @@ body {
 
 #account {
   display: none;
+  box-shadow: var(--shadow);
+  border: var(--border);
 }
 
 .content {

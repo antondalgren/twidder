@@ -136,6 +136,12 @@ function initiateHomeTab () {
     loadMessages(token, user.data.email, 'home')
     document.getElementById('message').value = ''
   }
+
+  let reload = document.getElementById('reload-messages-form')
+  reload.onsubmit = (event) => {
+    event.preventDefault()
+    loadMessages(token, user.data.email, 'home')
+  }
   loadMessages(token, user.data.email, 'home')
   loadUserInfo(token, user.data.email, 'home')
 }
@@ -198,9 +204,17 @@ function initiateBrowseTab () {
   let messageForm = document.getElementById('post-message-to-user-form')
   messageForm.onsubmit = (event) => {
     event.preventDefault()
-    APIPostMessage(token, event.target.message.value, document.getElementById('browse').getElementsByClassName('user-email').innerText)
-    loadMessages(token, document.getElementById('search-email').value, 'browse')
+    let targetEmail = document.getElementById('browse').getElementsByClassName('user-email')[0].innerText
+    APIPostMessage(token, event.target.message.value, targetEmail)
+    loadMessages(token, targetEmail, 'browse')
     document.getElementById('message-to-user').value = ''
+  }
+
+  let reload = document.getElementById('reload-messages-form')
+  reload.onsubmit = (event) => {
+    event.preventDefault()
+    let targetEmail = document.getElementById('browse').getElementsByClassName('user-email')[0].innerText
+    loadMessages(token, targetEmail, 'browse')
   }
 }
 
