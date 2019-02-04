@@ -65,15 +65,15 @@ body {
 .form > label {
   display: grid;
   grid-column: 1;
-  align-content: left;
-  justify-content: left;
+  align-content: start;
+  justify-content: start;
 }
 
 .form > input {
   display: grid;
   grid-column: 2;
-  align-content: left;
-  justify-content: left;
+  align-content: start;
+  justify-content: start;
 }
 
 .form > button {
@@ -100,7 +100,7 @@ body {
 .tab {
   display: inherit;
   grid-template-columns: repeat(auto-fit,100px);
-  justify-content: left
+  justify-content: start
 }
 
 .tab > .tablink {
@@ -170,14 +170,6 @@ body {
 .user-info > .user-data {
   grid-column: 2;
   display: inline;
-}
-
-.user-info > p {
-  display: inherit;
-  margin-block-end: none;
-  margin-block-start: none;
-  margin-inline-start: none;
-  margin-inline-end: none;
 }
 
 #post-message-form {
