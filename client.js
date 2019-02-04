@@ -27,7 +27,6 @@ function displayError (message, elementID) {
 
 function hideError () {
   let errors = document.getElementsByClassName('error')
-  console.log(errors)
   for (let error of errors) {
     error.innerText = ''
     error.style.display = 'none'
