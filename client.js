@@ -247,7 +247,15 @@ function APILogin (email, password) {
 }
 
 function APISignup (data) {
-  return serverstub.signUp(data)
+  return fetch('http://localhost:5000/sign_up', {
+    method: 'POST',
+    mode: "no-cors",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: data })
+  }).then(response => {
+    return response.json()
+  })
+  //return serverstub.signUp(data)
 }
 
 function APIChangePassword (token, oldPassword, newPassword) {

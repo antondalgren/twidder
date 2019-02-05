@@ -20,6 +20,15 @@ def find_user(email):
     ''', email)
   return res.fetchone()
 
+def find_user_with_password(email, password):
+  c = conn.cursor()
+  res = c.execute('''
+    SELECT
+    email
+    FROM users WHERE email=? AND password=?
+    ''', (email, password))
+  return res.fetchone()
+
 def post_message(from_email, to_email, message):
   c = conn.cursor()
   c.execute('''
