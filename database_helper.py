@@ -16,7 +16,6 @@ def make_dicts(cursor, row):
 
 
 def query_db(query, args=(), one=False):
-  print(args)
   cur = get_db().execute(query, args)
   rv = cur.fetchall()
   cur.close()
@@ -39,28 +38,25 @@ def find_user(email):
   return res
 
 def find_user_with_password(email, password):
-  c = conn.cursor()
-  res = c.execute('''
+  res = query_db('''
     SELECT
     email
     FROM users WHERE email=? AND password=?
-    ''', (email, password))
-  return res.fetchone()
+    ''', [email, password], True)
+  return res
 
 def post_message(from_email, to_email, message):
-  c = conn.cursor()
-  c.execute('''
+  query_db('''
     INSERT
     INTO posts (from_email, to_email, message) VALUES (?, ?, ?)
-    ''', (from_email, to_email, message))
-  conn.commit()
+    ''', [from_email, to_email, message])
+  g._database.commit()
 
 def signin(token, email):
-  c = conn.cursor()
-  c.execute('''
+  query_db('''
     INSER INTO active_users (token, email) VALUES (?, ?)
-  ''', (token, email))
-  conn.commit()
+  ''', [token, email])
+  g._database.commit()
 
 def signout(token):
   c = conn.cursor()
