@@ -13,10 +13,10 @@ def hello():
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
-  body = request.json
+  body = json.loads(request.data.decode("utf-8"))
   password = _password_hasher(body['password'])
   result = database_helper.find_user_with_password(body['email'], password)
-  if len(result) == 1:
+  if result != None:
     token = _signin_user(body['email'])
     return _return_json_message(True, "Successfully logged in", {"token": token})
   else:

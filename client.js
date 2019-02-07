@@ -243,7 +243,16 @@ function showContent (name) {
 }
 
 function APILogin (email, password) {
-  return serverstub.signIn(email, password)
+  return fetch('http://localhost:5000/sign_in', {
+    method: 'POST',
+    mode: "no-cors",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email , password: password})
+  }).then(response => {
+    console.log(response.json())
+    return response.json()
+  })
+  //return serverstub.signIn(email, password)
 }
 
 function APISignup (data) {
@@ -253,6 +262,7 @@ function APISignup (data) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data: data })
   }).then(response => {
+    console.log(response.json()) 
     return response.json()
   })
   //return serverstub.signUp(data)

@@ -54,7 +54,7 @@ def post_message(from_email, to_email, message):
 
 def signin(token, email):
   query_db('''
-    INSER INTO active_users (token, email) VALUES (?, ?)
+    INSERT INTO active_users (token, email) VALUES (?, ?)
   ''', [token, email])
   g._database.commit()
 
