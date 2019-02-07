@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
  id INTEGER PRIMARY KEY,
- first_name TEXT NOT NULL,
- family_name TEXT NOT NULL,
+ firstname TEXT NOT NULL,
+ familyname TEXT NOT NULL,
  email text NOT NULL UNIQUE,
  city text NOT NULL,
  country text NOT NULL,

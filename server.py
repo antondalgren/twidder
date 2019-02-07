@@ -30,7 +30,7 @@ def sign_up():
   print(data['password'])
   password = _password_hasher(data['password'])
   result = database_helper.find_user(data['email'])
-  if len(result) == 1:
+  if result != None:
     return _return_json_message(False, "User already exists")
   if (len(data["email"]) == 0 or len(data["password"]) < 4 or len(data['firstname']) == 0 or
       len(data['familyname']) == 0 or len(data['gender']) == 0 or len(data['city']) == 0 or
@@ -50,7 +50,7 @@ def _return_json_message(success, message="", data=""):
   return jsonify({"success": success, "message": message, "data": data})
 
 def _password_hasher(password):
-  return hashlib.md5(password)
+  return hashlib.md5(password.encode("utf-8")).hexdigest()
 
 
 if __name__ == '__main__':
