@@ -245,8 +245,9 @@ function showContent (name) {
 function APILogin (email, password) {
   return fetch('http://localhost:5000/sign_in', {
     method: 'POST',
-    mode: "no-cors",
-    headers: { 'Content-Type': 'application/json' },
+    mode: "cors",
+    headers: { 'Content-Type': 'application/json',
+              'Accept': 'application/json'},
     body: JSON.stringify({ email: email , password: password})
   }).then(response => {
     console.log(response.json())
@@ -258,8 +259,9 @@ function APILogin (email, password) {
 function APISignup (data) {
   return fetch('http://localhost:5000/sign_up', {
     method: 'POST',
-    mode: "no-cors",
-    headers: { 'Content-Type': 'application/json' },
+    mode: "cors",
+    headers: { 'Content-Type': 'application/json',
+              'Accept': 'application/json'},
     body: JSON.stringify({ data: data })
   }).then(response => {
     return response.json()
