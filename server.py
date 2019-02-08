@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import random
 import string
 import database_helper
@@ -9,7 +9,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-  return "Hello World!"
+  return app.send_static_file('client.html')
+
+@app.route("/static/<filename>")
+def static_files(filename):
+  return app.send_static_file(filename)
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():

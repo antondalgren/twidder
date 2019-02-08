@@ -72,7 +72,7 @@ function loadWelcome () {
   }
 
   const signup = document.getElementById('signup-form')
-  signup.onsubmit = (event) => {
+  signup.onsubmit = async (event) => {
     event.preventDefault()
     hideError()
     if (!isPasswordLengthOk(event.target.password.value)) {
@@ -89,7 +89,7 @@ function loadWelcome () {
         city: event.target.city.value,
         country: event.target.country.value
       }
-      let res = APISignup(data)
+      let res = await APISignup(data)
       if (!res.success) {
         displayError(res.message, 'signup-error')
       } else {
@@ -262,8 +262,9 @@ function APISignup (data) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data: data })
   }).then(response => {
-    console.log(response.json()) 
     return response.json()
+  }).then(res => {
+    return res
   })
   //return serverstub.signUp(data)
 }
