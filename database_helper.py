@@ -59,22 +59,18 @@ def signin(token, email):
   g._database.commit()
 
 def signout(token):
-  c = conn.cursor()
-  c.execute('''
+  query_db('''
     DELETE FROM active_users WHERE token=?
   ''', token)
-  conn.commit()
 
 def get_messages(email):
-  c = conn.cursor()
-  res = c.execute('''
+  res = query_db('''
     SELECT * FROM posts WHERE to_email=?
   ''', email)
-  return res.fetchall()
+  return res
 
 def email_from_token(token):
-  c = conn.cursor()
-  res = c.execute('''
+  res = query_db('''
     SELECT email FROM active_users WHERE token=?
-  ''', token)
-  return res.fetchall()
+  ''', token, True)
+  return res
