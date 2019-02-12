@@ -29,9 +29,7 @@ def sign_in():
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
   body = json.loads(request.data.decode("utf-8"))
-  print(body)
   data = body['data']
-  print(data['password'])
   password = _password_hasher(data['password'])
   result = database_helper.find_user(data['email'])
   if result != None:

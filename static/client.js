@@ -52,7 +52,7 @@ function clearToken () {
 function loadWelcome () {
   document.getElementById('content').innerHTML = document.getElementById('welcome-view').innerHTML
   let login = document.getElementById('login-form')
-  login.onsubmit = (event) => {
+  login.onsubmit = async (event) => {
     event.preventDefault()
     hideError()
     const email = event.target.email.value
@@ -61,7 +61,7 @@ function loadWelcome () {
     if (!isPasswordLengthOk(password)) {
       displayError('Error: Your password is to short', 'login-error')
     } else {
-      let res = APILogin(email, password)
+      let res = await APILogin(email, password)
       if (!res.success) {
         displayError(res.message, 'login-error')
       } else {
@@ -125,11 +125,11 @@ function initiateTabs () {
   }
 }
 
-function initiateHomeTab () {
+async function initiateHomeTab () {
   let form = document.getElementById('post-message-form')
   let token = getToken()
-  let user = APIUserData(token)
-  form.onsubmit = (event) => {
+  let user = await APIUserData(token)
+  form.onsubmit = async (event) => {
     event.preventDefault()
     APIPostMessage(token, event.target.message.value, user.data.email)
     loadMessages(token, user.data.email, 'home')
@@ -145,8 +145,8 @@ function initiateHomeTab () {
   loadUserInfo(token, user.data.email, 'home')
 }
 
-function loadMessages (token, email, sectionName) {
-  let res = APIGetMessages(token, email)
+async function loadMessages (token, email, sectionName) {
+  let res = await APIGetMessages(token, email)
   let messageContainer = document.getElementById(sectionName).getElementsByClassName('message-container')
   messageContainer[0].innerHTML = ''
   res.data.forEach(message => {
@@ -245,12 +245,10 @@ function showContent (name) {
 function APILogin (email, password) {
   return fetch('http://localhost:5000/sign_in', {
     method: 'POST',
-    mode: "cors",
     headers: { 'Content-Type': 'application/json',
-              'Accept': 'application/json'},
-    body: JSON.stringify({ email: email , password: password})
+      'Accept': 'application/json' },
+    body: JSON.stringify({ email: email, password: password })
   }).then(response => {
-    console.log(response.json())
     return response.json()
   })
   //return serverstub.signIn(email, password)
@@ -259,9 +257,8 @@ function APILogin (email, password) {
 function APISignup (data) {
   return fetch('http://localhost:5000/sign_up', {
     method: 'POST',
-    mode: "cors",
     headers: { 'Content-Type': 'application/json',
-              'Accept': 'application/json'},
+      'Accept': 'application/json' },
     body: JSON.stringify({ data: data })
   }).then(response => {
     return response.json()
