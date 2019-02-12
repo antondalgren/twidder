@@ -93,7 +93,7 @@ function loadWelcome () {
       if (!res.success) {
         displayError(res.message, 'signup-error')
       } else {
-        res = APILogin(data.email, data.password)
+        res = await APILogin(data.email, data.password)
         if (!res.success) {
           displayError(res.message, 'signup-error')
         } else {
@@ -131,18 +131,18 @@ async function initiateHomeTab () {
   let user = await APIUserData(token)
   form.onsubmit = async (event) => {
     event.preventDefault()
-    APIPostMessage(token, event.target.message.value, user.data.email)
-    loadMessages(token, user.data.email, 'home')
+    await APIPostMessage(token, event.target.message.value, user.data.email)
+    await loadMessages(token, user.data.email, 'home')
     document.getElementById('message').value = ''
   }
 
   let reload = document.getElementById('reload-messages-form')
-  reload.onsubmit = (event) => {
+  reload.onsubmit = async (event) => {
     event.preventDefault()
-    loadMessages(token, user.data.email, 'home')
+    await loadMessages(token, user.data.email, 'home')
   }
-  loadMessages(token, user.data.email, 'home')
-  loadUserInfo(token, user.data.email, 'home')
+  await loadMessages(token, user.data.email, 'home')
+  await loadUserInfo(token, user.data.email, 'home')
 }
 
 async function loadMessages (token, email, sectionName) {
@@ -150,12 +150,12 @@ async function loadMessages (token, email, sectionName) {
   let messageContainer = document.getElementById(sectionName).getElementsByClassName('message-container')
   messageContainer[0].innerHTML = ''
   res.data.forEach(message => {
-    messageContainer[0].innerHTML += '<p>From: ' + message.writer + ' Message: ' + message.content + '</p>'
+    messageContainer[0].innerHTML += '<p>From: ' + message.from_email + ' Message: ' + message.message + '</p>'
   })
 }
 
-function loadUserInfo (token, email, sectionName) {
-  let res = APIUserDataByEmail(token, email)
+async function loadUserInfo (token, email, sectionName) {
+  let res = await APIUserDataByEmail(token, email)
   let infoContainer = document.getElementById(sectionName).getElementsByClassName('user-info')
   infoContainer[0].innerHTML = ''
   infoContainer[0].innerHTML = '<span class="user-header"> Email: </span> <span class="user-data user-email">' + res.data.email + '</span>'
@@ -168,7 +168,7 @@ function loadUserInfo (token, email, sectionName) {
 
 function initiateAccountTab () {
   let form = document.getElementById('change-password-form')
-  form.onsubmit = (event) => {
+  form.onsubmit = async (event) => {
     event.preventDefault()
     hideError()
     if (!isPasswordLengthOk(event.target.password.value)) {
@@ -176,7 +176,7 @@ function initiateAccountTab () {
     } else if (!isPasswordsEqual(event.target.password.value, event.target.repeatPassword.value)) {
       displayError('Error: Your passwords does not match', 'change-password-error')
     } else {
-      let res = APIChangePassword(getToken(), event.target.oldPassword.value, event.target.password.value)
+      let res = await APIChangePassword(getToken(), event.target.oldPassword.value, event.target.password.value)
       if (!res.success) {
         displayError(res.message, 'change-password-error')
       }
@@ -195,31 +195,31 @@ function initiateAccountTab () {
 function initiateBrowseTab () {
   let form = document.getElementById('search-user-form')
   let token = getToken()
-  form.onsubmit = (event) => {
+  form.onsubmit = async (event) => {
     event.preventDefault()
     hideError()
-    let res = APIUserDataByEmail(token, event.target.email.value)
+    let res = await APIUserDataByEmail(token, event.target.email.value)
     if (!res.success) {
       displayError(res.message, 'search-error')
     } else {
-      loadMessages(token, event.target.email.value, 'browse')
-      loadUserInfo(token, event.target.email.value, 'browse')
+      await loadMessages(token, event.target.email.value, 'browse')
+      await loadUserInfo(token, event.target.email.value, 'browse')
     }
   }
   let messageForm = document.getElementById('post-message-to-user-form')
-  messageForm.onsubmit = (event) => {
+  messageForm.onsubmit = async (event) => {
     event.preventDefault()
     let targetEmail = document.getElementById('browse').getElementsByClassName('user-email')[0].innerText
-    APIPostMessage(token, event.target.message.value, targetEmail)
-    loadMessages(token, targetEmail, 'browse')
+    await APIPostMessage(token, event.target.message.value, targetEmail)
+    await loadMessages(token, targetEmail, 'browse')
     document.getElementById('message-to-user').value = ''
   }
 
   let reload = document.getElementById('reload-messages-form')
-  reload.onsubmit = (event) => {
+  reload.onsubmit = async (event) => {
     event.preventDefault()
     let targetEmail = document.getElementById('browse').getElementsByClassName('user-email')[0].innerText
-    loadMessages(token, targetEmail, 'browse')
+    await loadMessages(token, targetEmail, 'browse')
   }
 }
 
@@ -242,7 +242,7 @@ function showContent (name) {
   content.style.display = 'grid'
 }
 
-function APILogin (email, password) {
+async function APILogin (email, password) {
   return fetch('http://localhost:5000/sign_in', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json',
@@ -250,6 +250,8 @@ function APILogin (email, password) {
     body: JSON.stringify({ email: email, password: password })
   }).then(response => {
     return response.json()
+  }).then(res => {
+    return res
   })
   //return serverstub.signIn(email, password)
 }
@@ -269,25 +271,85 @@ function APISignup (data) {
 }
 
 function APIChangePassword (token, oldPassword, newPassword) {
-  return serverstub.changePassword(token, oldPassword, newPassword)
+  return fetch('http://localhost:5000/change_password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token, oldPassword: oldPassword, newPassword: newPassword })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.changePassword(token, oldPassword, newPassword)
 }
 
 function APISignout (token) {
-  return serverstub.signOut(token)
+  return fetch('http://localhost:5000/sign_out', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.signOut(token)
 }
 
 function APIUserData (token) {
-  return serverstub.getUserDataByToken(token)
+  return fetch('http://localhost:5000/get_user_data_by_token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.getUserDataByToken(token)
 }
 
 function APIPostMessage (token, message, email) {
-  return serverstub.postMessage(token, message, email)
+  return fetch('http://localhost:5000/post_message', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token, email: email, message: message })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.postMessage(token, message, email)
 }
 
 function APIGetMessages(token, email) {
-  return serverstub.getUserMessagesByEmail(token, email)
+  return fetch('http://localhost:5000/get_messages_by_email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token, email: email })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.getUserMessagesByEmail(token, email)
 }
 
 function APIUserDataByEmail(token, email) {
-  return serverstub.getUserDataByEmail(token, email)
+  return fetch('http://localhost:5000/get_user_data_by_email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+      'Accept': 'application/json' },
+    body: JSON.stringify({ token: token, email: email })
+  }).then(response => {
+    return response.json()
+  }).then(res => {
+    return res
+  })
+  //return serverstub.getUserDataByEmail(token, email)
 }

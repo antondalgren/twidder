@@ -61,16 +61,23 @@ def signin(token, email):
 def signout(token):
   query_db('''
     DELETE FROM active_users WHERE token=?
-  ''', token)
+  ''', [token])
+  g._database.commit()
 
 def get_messages(email):
   res = query_db('''
     SELECT * FROM posts WHERE to_email=?
-  ''', email)
+  ''', [email])
   return res
 
 def email_from_token(token):
   res = query_db('''
     SELECT email FROM active_users WHERE token=?
-  ''', token, True)
+  ''', [token], True)
   return res
+
+def update_password(email, password):
+  query_db('''
+    UPDATE users SET password=? WHERE email=?
+  ''', [password, email])
+  g._database.commit()
