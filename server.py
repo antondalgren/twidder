@@ -128,7 +128,3 @@ def _return_json_message(success, message="", data=""):
 
 def _password_hasher(password):
   return hashlib.md5(password.encode("utf-8")).hexdigest()
-
-
-if __name__ == '__main__':
-  app.run(host="0.0.0.0", debug=True)
