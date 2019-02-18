@@ -65,6 +65,7 @@ function loadWelcome () {
       if (!res.success) {
         displayError(res.message, 'login-error')
       } else {
+        APIWebsocket(res.data)
         setToken(res.data)
         loadView()
       }
@@ -352,4 +353,19 @@ function APIUserDataByEmail(token, email) {
     return res
   })
   //return serverstub.getUserDataByEmail(token, email)
+}
+
+function APIWebsocket(token) {
+  let ws = new WebSocket('ws://localhost:5000/websocket/connect')
+  ws.onopen = (event) => {
+    ws.send(token)
+  }
+
+  ws.onmessage = (event) => {
+    if (event.data === 'sign_out') {
+      APISignout(token)
+      clearToken()
+      loadView()
+    }
+  }
 }

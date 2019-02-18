@@ -7,6 +7,7 @@ import hashlib
 import json
 app = Flask(__name__)
 
+active_users = {}
 @app.route("/")
 def hello():
   return app.send_static_file('client.html')
@@ -25,6 +26,19 @@ def sign_in():
     return _return_json_message(True, "Successfully logged in", token)
   else:
     return _return_json_message(False, "No such user")
+
+@app.route('/websocket/connect')
+def websocket():
+  if request.environ.get('wsgi.websocket'):
+    socket = request.environ['wsgi.websocket']
+    message = socket.receive()
+    user = database_helper.email_from_token(message)
+    if active_users.get(user['email']) != None:
+      active_users[user['email']].send('sign_out')
+    active_users[user['email']] = socket
+    while True:
+      socket.receive()
+
 
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
