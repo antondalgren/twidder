@@ -4,6 +4,10 @@ window.onload = () => {
 }
 
 function loadView () {
+  let token = getToken()
+  if (token !== null) {
+    APIWebsocket(token)
+  }
   if (!isLoggedin()) {
     loadWelcome()
   } else {

@@ -31,11 +31,14 @@ def sign_in():
 def websocket():
   if request.environ.get('wsgi.websocket'):
     socket = request.environ['wsgi.websocket']
-    message = socket.receive()
-    user = database_helper.email_from_token(message)
+    token = socket.receive()
+    user = database_helper.email_from_token(token)
     if active_users.get(user['email']) != None:
-      active_users[user['email']].send('sign_out')
-    active_users[user['email']] = socket
+      if active_users[user['email']]['token'] != token:
+        active_users[user['email']]['socket'].send('sign_out')
+    active_users[user['email']] = {}
+    active_users[user['email']]['token'] = token
+    active_users[user['email']]['socket'] = socket
     while True:
       socket.receive()
 
