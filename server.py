@@ -35,7 +35,7 @@ def websocket():
     user = database_helper.email_from_token(token)
     if active_users.get(user['email']) != None:
       if active_users[user['email']]['token'] != token:
-        active_users[user['email']]['socket'].send('sign_out')
+        _send_message(active_users[user['email']]['socket'], {"data": "sign_out"})
     active_users[user['email']] = {}
     active_users[user['email']]['token'] = token
     active_users[user['email']]['socket'] = socket
@@ -145,3 +145,10 @@ def _return_json_message(success, message="", data=""):
 
 def _password_hasher(password):
   return hashlib.md5(password.encode("utf-8")).hexdigest()
+
+def _broadcast(message):
+  for users in active_users.keys():
+    active_users[users]['socket'].send(json.dumps(message))
+
+def _send_message(socket, message):
+  socket.send(json.dumps(message))

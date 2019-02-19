@@ -366,10 +366,13 @@ function APIWebsocket(token) {
   }
 
   ws.onmessage = (event) => {
-    if (event.data === 'sign_out') {
+    let message = JSON.parse(event.data)
+    if (message['data'] === 'sign_out') {
       APISignout(token)
       clearToken()
       loadView()
     }
+
+    console.log(message)
   }
 }
