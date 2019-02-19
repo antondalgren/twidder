@@ -1,13 +1,13 @@
 
 window.onload = () => {
-  loadView()
-}
-
-function loadView () {
   let token = getToken()
   if (token !== null) {
     APIWebsocket(token)
   }
+  loadView()
+}
+
+function loadView () {
   if (!isLoggedin()) {
     loadWelcome()
   } else {
