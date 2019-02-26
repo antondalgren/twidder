@@ -39,6 +39,8 @@ def websocket():
     active_users[user['email']] = {}
     active_users[user['email']]['token'] = token
     active_users[user['email']]['socket'] = socket
+    _send_active_users()
+    _send_total_posts()
     while True:
       socket.receive()
 
@@ -63,8 +65,10 @@ def sign_up():
 def sign_out():
   body = json.loads(request.data.decode("utf-8"))
   token = body['token']
-  print(token)
+  user = database_helper.email_from_token(token)
   database_helper.signout(token)
+  del active_users[user['email']]
+  _send_active_users()
   return _return_json_message(True, "Successfully signed out")
 
 @app.route('/change_password', methods=['POST'])
@@ -133,6 +137,7 @@ def post_message():
   if user == None:
     return _return_json_message(False, "User not signed in")
   database_helper.post_message(user['email'], body['email'], body['message'])
+  _send_total_posts()
   return _return_json_message(True, "Successfully posted message")
 
 def _signin_user(email):
@@ -152,3 +157,25 @@ def _broadcast(message):
 
 def _send_message(socket, message):
   socket.send(json.dumps(message))
+
+def _send_active_users():
+  message = {
+    'data': 'users',
+    'users' : {
+      'active_users' : len(active_users),
+      'total_users' : database_helper.total_users()
+    }
+  }
+  _broadcast(message)
+
+def _send_total_posts():
+  total_posts = database_helper.total_messages()
+  for email in active_users.keys():
+    message = {
+      'data': 'posts',
+      'posts' : {
+        'my_posts' : database_helper.total_user_messges(email),
+        'total_posts' : total_posts
+      }
+    }
+    _send_message(active_users[email]['socket'], message)

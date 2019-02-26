@@ -373,6 +373,45 @@ function APIWebsocket(token) {
       loadView()
     }
 
+    if (message['data'] === 'posts') {
+      var ctx = document.getElementById('postsChart').getContext('2d')
+      var data = {
+        datasets: [
+          {
+            data: [message.posts.my_posts, message.posts.total_posts - message.posts.my_posts],
+            backgroundColor: ['#3e95cd', '#8e5ea2']
+          }
+        ],
+        labels: [
+          'Posts on my wall',
+          'Others posts'
+        ]
+      }
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data
+      })
+    }
+
+    if (message['data'] === 'users') {
+      var ctx = document.getElementById('usersChart').getContext('2d')
+      var data = {
+        datasets: [
+          {
+            data: [message.users.active_users, message.users.total_users - message.users.active_users],
+            backgroundColor: ['#3cba9f', '#e8c3b9']
+          }
+        ],
+        labels: [
+          'Active users',
+          'Offline users'
+        ]
+      }
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data
+      })
+    }
     console.log(message)
   }
 }

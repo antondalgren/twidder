@@ -54,6 +54,12 @@ body {
   align-content: center;
 }
 
+#chartsContainer {
+  display: grid;
+  grid-template-areas: 'users posts';
+  max-width: 300px;
+}
+
 .form {
   display: inherit;
   justify-content: center;

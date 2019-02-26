@@ -81,3 +81,21 @@ def update_password(email, password):
     UPDATE users SET password=? WHERE email=?
   ''', [password, email])
   g._database.commit()
+
+def total_users():
+  res = query_db('''
+    SELECT count(id) FROM users
+  ''', one=True)
+  return res['count(id)']
+
+def total_messages():
+  res = query_db('''
+    SELECT count(id) FROM posts
+  ''', one=True)
+  return res['count(id)']
+
+def total_user_messges(email):
+  res = query_db('''
+    SELECT count(id) FROM posts WHERE to_email=?
+  ''', [email], True)
+  return res['count(id)']
